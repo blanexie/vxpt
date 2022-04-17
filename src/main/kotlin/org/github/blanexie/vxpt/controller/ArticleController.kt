@@ -1,7 +1,7 @@
 package org.github.blanexie.vxpt.controller
 
-import org.github.blanexie.vxpt.dao.ArticleRepository
-import org.github.blanexie.vxpt.dao.UserRepository
+import org.github.blanexie.vxpt.post.dao.ArticleRepository
+import org.github.blanexie.vxpt.post.dao.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

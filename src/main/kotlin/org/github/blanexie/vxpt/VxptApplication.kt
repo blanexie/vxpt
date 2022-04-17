@@ -1,9 +1,9 @@
 package org.github.blanexie.vxpt
 
-import org.github.blanexie.vxpt.dao.ArticleRepository
-import org.github.blanexie.vxpt.dao.UserRepository
-import org.github.blanexie.vxpt.model.Article
-import org.github.blanexie.vxpt.model.User
+import org.github.blanexie.vxpt.post.dao.ArticleRepository
+import org.github.blanexie.vxpt.post.dao.UserRepository
+import org.github.blanexie.vxpt.post.model.Article
+import org.github.blanexie.vxpt.post.model.User
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

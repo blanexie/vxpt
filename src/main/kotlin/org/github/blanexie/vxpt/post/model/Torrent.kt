@@ -16,7 +16,8 @@ class Torrent(
     var id: Int? = null,
     var postId: Int,// 帖子id
     var name: String,
-    val length: Long, // 种子的总大小
+    @Column(name = "`size`")
+    var size: Long, // 种子的总大小
     @Embedded
     var ration: Ration,
     @Embedded
@@ -27,8 +28,11 @@ class Torrent(
     @Column(unique = true)
     var infoHash: String,
     var infoLength: Long?,  //：文件的总大小（Byte）
-    @OneToMany
+
+    @OneToMany(mappedBy = "torrent")
     var infoFiles: Set<FileInfo>?, //多文件中的文件   //files 和 length 只能有一个
+
+
     val infoName: String, //：推荐的文件夹名，此项可于下载时更改
     @Embedded
     val infoPieces: Pieces, //：文件的特征信息（将所有文件按照piece length的字节大小分成块，每块计算一个SHA1值，然后将这些值连接起来所组成）
@@ -51,12 +55,18 @@ class FileInfo(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
     var length: Long,
+
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
     var path: List<String>,
+
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
     var pathUtf8: List<String>?,//文件名的UTF-8编码，同上
+
+    @ManyToOne
+    var torrent: Torrent, //多文件中的文件   //files 和 length 只能有一个
+
 )
 
 @Embeddable
@@ -66,12 +76,18 @@ class Announce(var announce: String, var announceList: String?)
 @Embeddable
 class Ration(
     var rate: Float,
+    @Column(name = "rate_start")
     var start: LocalDateTime,
+    @Column(name = "rate_end")
     var end: LocalDateTime
 )
 
 @Embeddable
-class Pieces(var pieces: String, var length: Long)
+class Pieces(
+    var pieces: String,
+    @Column(name = "pieces_length")
+    var length: Long
+)
 
 @Embeddable
 class Publisher(

@@ -17,7 +17,7 @@ class Torrent(
     var postId: Int,// 帖子id
     var name: String,
     @Column(name = "`size`")
-    var size: Long, // 种子的总大小
+    var size: Long, //  总大小
     @Embedded
     var ration: Ration,
     @Embedded
@@ -27,13 +27,13 @@ class Torrent(
     val encoding: String,  //：种子文件的默认编码，比如GB2312，Big5，utf-8等
     @Column(unique = true)
     var infoHash: String,
-    var infoLength: Long?,  //：文件的总大小（Byte）
-
+    //：文件的总大小（Byte）
+    var infoLength: Long?,
+    //多文件中的文件   //files 和 length 只能有一个
     @OneToMany(mappedBy = "torrent")
-    var infoFiles: Set<FileInfo>?, //多文件中的文件   //files 和 length 只能有一个
-
-
-    val infoName: String, //：推荐的文件夹名，此项可于下载时更改
+    var infoFiles: Set<FileInfo>?,
+    //：推荐的文件夹名，此项可于下载时更改
+    val infoName: String,
     @Embedded
     val infoPieces: Pieces, //：文件的特征信息（将所有文件按照piece length的字节大小分成块，每块计算一个SHA1值，然后将这些值连接起来所组成）
     @Embedded

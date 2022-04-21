@@ -16,7 +16,7 @@ class Post(
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        schema = "vxpt", name = "post_lebels",
+        schema = "vxpt", name = "post_labels",
         joinColumns = [JoinColumn(name = "post_id")],
         inverseJoinColumns = [
             JoinColumn(name = "label_id")

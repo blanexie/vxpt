@@ -14,7 +14,7 @@ class Post(
     var title: String, // 标题
     var cover: String, //封面
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "vxpt", name = "post_labels",
         joinColumns = [JoinColumn(name = "post_id")],

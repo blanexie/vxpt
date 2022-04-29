@@ -21,6 +21,9 @@ repositories {
 }
 
 dependencies {
+	implementation("cn.hutool:hutool-all:5.8.0.M4")
+
+
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")

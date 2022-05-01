@@ -1,10 +1,14 @@
 package org.github.blanexie.vxpt.tracker.model
 
+import cn.hutool.core.bean.BeanUtil
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import org.github.blanexie.vxpt.post.model.Ration
+import org.github.blanexie.vxpt.support.PeerLog
+import org.github.blanexie.vxpt.support.event.PeerLogEvent
 import org.github.blanexie.vxpt.tracker.dao.PeerRepository
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
+import org.springframework.context.ApplicationEventPublisher
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -38,10 +42,10 @@ import javax.persistence.*
 class Peer(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int?,
-    val authKey: String,
-    val userId: Int,
-    val torrentId: Int,
-    val infoHash: String,
+    var authKey: String,
+    var userId: Int,
+    var torrentId: Int,
+    var infoHash: String,
     val peerId: String,
     var trackerId: String?,
 
@@ -56,7 +60,7 @@ class Peer(
     var numwant: Int,
 
     var status: Int,
-    val createTime: LocalDateTime,
+    var createTime: LocalDateTime,
     var updateTime: LocalDateTime,
 ) {
 
@@ -67,8 +71,29 @@ class Peer(
     /**
      * 校验,  落库,  返回流水对象
      */
-    fun checkAndLogEvent(){
+    fun checkAndLogEvent(peerRepository: PeerRepository, applicationEventPublisher: ApplicationEventPublisher) {
+        val peer = peerRepository.findByAuthKeyAndInfoHashAndStatus(this.authKey, this.infoHash, 0)
+        if (peer == null) {
+            val save = peerRepository.save(this)
+            BeanUtil.copyProperties(save, this)
+            //发出流水消息
+            val peerLog =
+                PeerLog(this.infoHash, this.userId, this.downloaded, this.uploaded, this.left, mapOf("peer" to this))
+            applicationEventPublisher.publishEvent(PeerLogEvent(peerLog))
+        } else {
+            val downloaded = peer.downloaded - this.downloaded
+            val uploaded = peer.uploaded - this.uploaded
+            val left = peer.left - this.left
 
+            this.id = peer.id
+            this.createTime = peer.createTime
+            this.updateTime = peer.updateTime
+            val peerLog =
+                PeerLog(this.infoHash, this.userId, downloaded, uploaded, left, mapOf("peer" to this))
+            val save = peerRepository.save(this)
+            //发出流水消息
+            applicationEventPublisher.publishEvent(PeerLogEvent(peerLog))
+        }
     }
 
     fun findPeers(peerRepository: PeerRepository): List<Peer> {

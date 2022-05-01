@@ -1,5 +1,6 @@
 package org.github.blanexie.vxpt.post.model
 
+import org.github.blanexie.vxpt.post.dao.PostRepository
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -22,7 +23,7 @@ class Post(
             JoinColumn(name = "label_id")
         ]
     )
-    var labels: Set<Label>,
+    var labels: MutableSet<Label>,
     @Column(columnDefinition = "TEXT")
     var content: String,  //markdown 文本描述
 
@@ -31,6 +32,24 @@ class Post(
     var createTime: LocalDateTime = LocalDateTime.now(),
     var updateTime: LocalDateTime = LocalDateTime.now(),
 ) {
+
+
+    fun save(repository: PostRepository):Post {
+        repository.save(this)
+        return this
+    }
+
+    fun addLabel(repository: PostRepository, label: Label) {
+        this.labels.add(label)
+        repository.save(this)
+    }
+
+    fun deleteLabel(repository: PostRepository, label: Label) {
+        this.labels.removeIf {
+            it.id == label.id
+        }
+        repository.save(this)
+    }
 
 
 }

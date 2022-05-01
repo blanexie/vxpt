@@ -1,6 +1,7 @@
 package org.github.blanexie.vxpt.post.model
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
+import org.github.blanexie.vxpt.post.dao.TorrentRepository
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import java.time.LocalDateTime
@@ -39,10 +40,20 @@ class Torrent(
     @Embedded
     val infoPublisher: Publisher,
 
+    val infoByte: ByteArray,
+
     val status: Int = 0,
     val updateTime: LocalDateTime = LocalDateTime.now(),
     val createTime: LocalDateTime = LocalDateTime.now(),
-)
+) {
+
+    fun save(torrentRepository: TorrentRepository): Torrent {
+        return torrentRepository.save(this)
+    }
+
+
+
+}
 
 /**
  * 种子中的info信息

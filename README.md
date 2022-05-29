@@ -3,6 +3,17 @@
 
 ## 账号相关
 ### 登录接口
+POST /api/user/login
+请求参数:
+| name | 类型 |  说明 |
+| --- | --- | --- |
+
+var nickName: String,
+@Column(unique = true)
+var email: String,
+var pwd: String,
+
+
 ### 注册
 ### 退出
 

@@ -54,6 +54,7 @@ class Peer(
 
     var downloaded: Long,
     var uploaded: Long,
+    @Column(name = "`left`")
     var left: Long,
 
     var event: String,

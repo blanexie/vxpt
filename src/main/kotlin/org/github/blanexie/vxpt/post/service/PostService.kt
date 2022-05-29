@@ -1,6 +1,7 @@
 package org.github.blanexie.vxpt.post.service
 
 import org.github.blanexie.vxpt.post.dao.PostRepository
+import org.github.blanexie.vxpt.post.dto.PostDTO
 import org.github.blanexie.vxpt.post.dto.PostSearchQuery
 import org.github.blanexie.vxpt.post.model.Label
 import org.github.blanexie.vxpt.post.model.Post
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Service
 @Service
 class PostService(val postRepository: PostRepository) {
 
-    fun savePost(post: Post): Post {
+    fun savePost(postDTO: PostDTO, userId: Int): Post {
+        val post = Post(null, postDTO.title, postDTO.cover, postDTO.category, postDTO.labels, postDTO.content, userId)
         return post.save(postRepository)
     }
 

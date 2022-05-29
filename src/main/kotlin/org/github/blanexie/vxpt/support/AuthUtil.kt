@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AuthUtil(
-    @Value("#{vxpt.auth.secret}")
-    val secret: String
+    @Value("\${vxpt.auth.secret}")
+      val secret: String
 ) {
 
     private val aes = SecureUtil.aes(DigestUtil.sha256(secret))

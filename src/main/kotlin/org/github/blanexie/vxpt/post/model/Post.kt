@@ -1,5 +1,6 @@
 package org.github.blanexie.vxpt.post.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import org.github.blanexie.vxpt.post.dao.PostRepository
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -15,6 +16,8 @@ class Post(
     var title: String, // 标题
     var cover: String, //封面
 
+    var category: String, //分类
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "vxpt", name = "post_labels",
@@ -24,17 +27,21 @@ class Post(
         ]
     )
     var labels: MutableSet<Label>,
+
     @Column(columnDefinition = "TEXT")
     var content: String,  //markdown 文本描述
 
     var userId: Int, //用户的id
-    var status: Int,
+
+    var status: Int = 0,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var createTime: LocalDateTime = LocalDateTime.now(),
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var updateTime: LocalDateTime = LocalDateTime.now(),
 ) {
 
 
-    fun save(repository: PostRepository):Post {
+    fun save(repository: PostRepository): Post {
         repository.save(this)
         return this
     }

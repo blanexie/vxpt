@@ -1,13 +1,12 @@
 package org.github.blanexie.vxpt.controller
 
-import org.github.blanexie.vxpt.account.model.User
+import org.github.blanexie.vxpt.account.dto.UserDTO
 import org.github.blanexie.vxpt.account.service.UserService
 import org.github.blanexie.vxpt.support.WebResponse
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.github.blanexie.vxpt.support.filter.NotLogin
+import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
+
 
 @RestController
 @RequestMapping("/api/user")
@@ -16,27 +15,30 @@ class UserController(val userService: UserService) {
     /**
      * 注册用户
      */
-    @PostMapping("add")
-    fun add(@RequestBody user: User): Mono<WebResponse> {
+    @NotLogin
+    @PostMapping("register")
+    fun add(@RequestBody userDTO: UserDTO): Mono<WebResponse> {
         return Mono.fromCallable {
-            val save = user.save(userRepository = userService.userRepository)
-            WebResponse(data = save)
+            WebResponse(data = userService.register(userDTO))
         }
     }
 
-    @PostMapping("loginByNickName")
-    fun loginByNickName(@RequestBody user: User): Mono<WebResponse> {
+    @NotLogin
+    @PostMapping("login")
+    fun login(@RequestBody userDTO: UserDTO): Mono<WebResponse> {
         return Mono.fromCallable {
-            val user = userService.loginByNickName(user.nickName, user.pwd)
-            WebResponse(data = user)
+            val user = userService.login(userDTO)
+            user?.let {
+                WebResponse(data = user.token)
+            } ?: WebResponse(403, "登录失败")
         }
     }
 
-    @PostMapping("loginByEmail")
-    fun loginByEmail(@RequestBody user: User): Mono<WebResponse> {
+    @GetMapping("logout")
+    fun logout(@RequestHeader token: String): Mono<WebResponse> {
         return Mono.fromCallable {
-            val user = userService.loginByEmail(user.email, user.pwd)
-            WebResponse(data = user)
+            userService.logout(token)
+            WebResponse()
         }
     }
 

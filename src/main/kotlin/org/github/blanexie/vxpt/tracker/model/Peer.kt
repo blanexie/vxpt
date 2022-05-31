@@ -2,8 +2,6 @@ package org.github.blanexie.vxpt.tracker.model
 
 import cn.hutool.core.bean.BeanUtil
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import org.github.blanexie.vxpt.post.model.Ration
-import org.github.blanexie.vxpt.support.PeerLog
 import org.github.blanexie.vxpt.support.event.PeerLogEvent
 import org.github.blanexie.vxpt.tracker.dao.PeerRepository
 import org.hibernate.annotations.Type

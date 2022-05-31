@@ -26,7 +26,7 @@ class PostService(val postRepository: PostRepository) {
             postSearchQuery.title,
             postSearchQuery.labels,
             1,
-            PageRequest.of(postSearchQuery.pageNo, postSearchQuery.pageSize)
+            PageRequest.of(postSearchQuery.pageNo-1, postSearchQuery.pageSize)
         )
         return page
     }

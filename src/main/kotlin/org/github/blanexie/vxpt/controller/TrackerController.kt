@@ -3,6 +3,7 @@ package org.github.blanexie.vxpt.controller
 import cn.hutool.core.util.HexUtil
 import com.dampcake.bencode.Bencode
 import io.netty.buffer.Unpooled
+import org.github.blanexie.vxpt.support.filter.NotLogin
 import org.github.blanexie.vxpt.tracker.model.Peer
 import org.github.blanexie.vxpt.tracker.service.PeerService
 import org.github.blanexie.vxpt.tracker.service.dto.PeerDTO
@@ -17,8 +18,9 @@ val bencode = Bencode(true)
 @RestController
 class TrackerController(val peerService: PeerService) {
 
+    @NotLogin
     @GetMapping("/announce")
-    fun uploadTorrent(peerDTO: PeerDTO, response: ServletServerHttpResponse): Mono<ByteArray> {
+    fun uploadTorrent(peerDTO: PeerDTO): Mono<ByteArray> {
         val fromCallable = Mono.fromCallable {
             val peers = peerService.announce(peerDTO)
             val buildResp = this.buildResp(peers)

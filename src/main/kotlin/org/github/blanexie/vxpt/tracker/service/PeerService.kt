@@ -20,10 +20,13 @@ class PeerService(
 ) {
 
     fun announce(peerDTO: PeerDTO): List<Peer> {
-        val peer = peerDTO.toPeer(peerRepository, authUtil)
-        peer.checkAndLogEvent(peerRepository, eventPublisher)
-        val peers = peer.findPeers(peerRepository)
-        return peers
+        val peer = peerRepository.findByAuthKeyAndInfoHashAndStatus(peerDTO.authKey, peerDTO.infoHash, 0)
+        return peer?.let {
+            //更新数据
+            //发出消息
+            //获取其他peer
+            it.findPeers(peerRepository)
+        } ?: listOf<Peer>()
     }
 
     fun scrape() {

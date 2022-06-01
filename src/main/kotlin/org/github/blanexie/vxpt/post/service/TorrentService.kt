@@ -57,7 +57,9 @@ class TorrentService() {
         torrentMap["encoding"] = "utf-8"
         val creationDate = DateUtil.date(torrent.creationDate).toString("yyyy-MM-dd HH:mm:ss")
         torrentMap["creation date"] = creationDate
+
         val auth = DigestUtil.md5Hex("${torrent.id}${torrent.infoHash}${userId}")
+        
         torrentMap["announce"] = prop.value + auth
         torrentMap["comment"] = "vxpt auth:${auth}"
         val encode = bencode.encode(torrentMap)

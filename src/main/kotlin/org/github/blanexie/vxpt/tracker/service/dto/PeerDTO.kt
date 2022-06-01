@@ -61,34 +61,7 @@ class PeerDTO(
     val compact: Int,
 ) {
 
-    fun toPeer(peerRepository: PeerRepository, authUtil: AuthUtil): Peer {
-        val userIdAndTorrentId = this.getUserIdAndTorrentId(authUtil)
-        val peer = Peer(
-            null,
-            this.authKey,
-            userIdAndTorrentId.first,
-            userIdAndTorrentId.second,
-            this.infoHash,
-            this.peerId,
-            null,
-            IpAddr(this.ip, this.ipv6, this.port, this.compact),
-            this.downloaded,
-            this.uploaded,
-            this.left,
-            this.event,
-            this.numwant,
-            0,
-            LocalDateTime.now(),
-            LocalDateTime.now()
-        )
-        return peer
-    }
 
-    private fun getUserIdAndTorrentId(authUtil: AuthUtil): Pair<Int, Int> {
-        val hexDecode = authUtil.hexDecode(this.authKey);
-        val decrypt = authUtil.decrypt(hexDecode)
-        return ByteBuffer.wrap(decrypt).int to ByteBuffer.wrap(decrypt).int
-    }
 
 }
 

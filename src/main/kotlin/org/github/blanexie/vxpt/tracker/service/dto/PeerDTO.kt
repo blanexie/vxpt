@@ -1,14 +1,6 @@
 package org.github.blanexie.vxpt.tracker.service.dto
 
-import cn.hutool.core.util.HexUtil
 import com.fasterxml.jackson.annotation.JsonAlias
-import org.github.blanexie.vxpt.support.AuthUtil
-import org.github.blanexie.vxpt.tracker.dao.PeerRepository
-import org.github.blanexie.vxpt.tracker.model.IpAddr
-import org.github.blanexie.vxpt.tracker.model.Peer
-import org.springframework.data.repository.findByIdOrNull
-import java.nio.ByteBuffer
-import java.time.LocalDateTime
 
 /**
  *   ?auth_key=e934b04ba3234d639c0523f0cb15fe0q
@@ -60,7 +52,6 @@ class PeerDTO(
     val port: Int,
     val compact: Int,
 ) {
-
 
 
 }

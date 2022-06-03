@@ -2,8 +2,8 @@ package org.github.blanexie.vxpt.tracker.model
 
 import cn.hutool.core.bean.BeanUtil
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import org.github.blanexie.vxpt.support.event.PeerLogEvent
 import org.github.blanexie.vxpt.tracker.dao.PeerRepository
+import org.github.blanexie.vxpt.tracker.service.dto.PeerDTO
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.springframework.context.ApplicationEventPublisher
@@ -68,34 +68,19 @@ class Peer(
     }
 
 
-
-
-    /**
-     * 校验,  落库,  返回流水对象
-     */
-    fun checkAndLogEvent(peerRepository: PeerRepository, applicationEventPublisher: ApplicationEventPublisher) {
-        val peer = peerRepository.findByAuthKeyAndInfoHashAndStatus(this.authKey, this.infoHash, 0)
-        if (peer == null) {
-            val save = peerRepository.save(this)
-            BeanUtil.copyProperties(save, this)
-            //发出流水消息
-            val peerLog =
-                PeerLog(this.infoHash, this.userId, this.downloaded, this.uploaded, this.left, mapOf("peer" to this))
-            applicationEventPublisher.publishEvent(PeerLogEvent(peerLog))
-        } else {
-            val downloaded = peer.downloaded - this.downloaded
-            val uploaded = peer.uploaded - this.uploaded
-            val left = peer.left - this.left
-
-            this.id = peer.id
-            this.createTime = peer.createTime
-            this.updateTime = peer.updateTime
-            val peerLog =
-                PeerLog(this.infoHash, this.userId, downloaded, uploaded, left, mapOf("peer" to this))
-            val save = peerRepository.save(this)
-            //发出流水消息
-            applicationEventPublisher.publishEvent(PeerLogEvent(peerLog))
-        }
+    fun update(peerDTO: PeerDTO) {
+        this.updateTime = LocalDateTime.now()
+        this.downloaded = peerDTO.downloaded
+        this.uploaded = peerDTO.uploaded
+        this.event = peerDTO.event
+        this.left = peerDTO.left
+        this.ipAddr = this.ipAddr?.let {
+            it.ip = peerDTO.ip
+            it.ipv6 = peerDTO.ipv6
+            it.port = peerDTO.port
+            it.compact = peerDTO.compact
+            it
+        } ?: IpAddr(peerDTO.ip, peerDTO.ipv6, peerDTO.port, peerDTO.compact)
     }
 
     fun findPeers(peerRepository: PeerRepository): List<Peer> {

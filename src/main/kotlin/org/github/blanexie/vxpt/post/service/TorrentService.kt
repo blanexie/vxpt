@@ -63,7 +63,8 @@ class TorrentService() {
         torrentMap["announce"] = prop.value + auth
         torrentMap["comment"] = "vxpt auth:${auth}"
         val encode = bencode.encode(torrentMap)
-        applicationEventPublisher.publishEvent(TorrentDownloadEvent(auth, torrent.infoHash, userId, torrent.id!!))
+        val torrentDownloadEvent = TorrentDownloadEvent(auth, torrent.infoHash, userId, torrent.id!!)
+        applicationEventPublisher.publishEvent(torrentDownloadEvent)
         return encode
     }
 

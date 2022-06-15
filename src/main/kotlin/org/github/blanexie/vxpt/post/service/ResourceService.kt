@@ -1,22 +1,35 @@
 package org.github.blanexie.vxpt.post.service
 
 import cn.hutool.core.io.FileUtil
-import cn.hutool.core.util.IdUtil
 import cn.hutool.crypto.digest.DigestUtil
-import cn.hutool.crypto.digest.MD5
+import org.github.blanexie.vxpt.post.dao.LabelRepository
 import org.github.blanexie.vxpt.post.dao.ResourceRepository
-import org.github.blanexie.vxpt.post.dao.TorrentRepository
+import org.github.blanexie.vxpt.post.model.Label
 import org.github.blanexie.vxpt.post.model.Resource
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import reactor.core.publisher.Mono
 import java.nio.file.Path
 
 
 @Service
-class ResourceService(val resourceRepository: ResourceRepository) {
+class ResourceService(
+    val resourceRepository: ResourceRepository,
+    val labelRepository: LabelRepository
+) {
 
+    fun labels(): Mono<List<Label>> {
+        return Mono.fromCallable {
+            val lables = labelRepository.findAll()
+            lables.map { it }.toList()
+        }
+    }
+    fun category(): Mono<List<Label>> {
+        return Mono.fromCallable {
+            val lables = labelRepository.findAll()
+            lables.map { it }.toList()
+        }
+    }
 
     /**
      * 上传文件

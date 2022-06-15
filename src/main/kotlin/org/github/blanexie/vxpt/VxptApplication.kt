@@ -41,7 +41,7 @@ class VxptApplication {
     fun corsFilter(): CorsWebFilter {
         val config = CorsConfiguration()
         config.allowCredentials = true
-        config.addAllowedOrigin("*")
+        config.allowedOriginPatterns = listOf("*")
         config.addAllowedHeader("*")
         config.addAllowedMethod("*")
 
